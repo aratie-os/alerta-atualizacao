@@ -24,6 +24,16 @@
   </categories>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.3" date="2026-09-30">
+      <description>
+        <p>Launch Discover with the original Plasma session environment.</p>
+      </description>
+    </release>
+    <release version="2.0.2" date="2026-09-30">
+      <description>
+        <p>Respect phased updates by checking simulated APT installation operations.</p>
+      </description>
+    </release>
     <release version="2.0.1" date="2026-09-30">
       <description>
         <p>Fix false update alerts, skip live sessions and place the alert in the lower-right corner.</p>

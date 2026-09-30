@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(system-upgrade VERSION 2.0.1 LANGUAGES CXX)
+project(system-upgrade VERSION 2.0.3 LANGUAGES CXX)
 
 include(CTest)
 include(GNUInstallDirs)
@@ -14,6 +14,8 @@ find_package(Qt6 6.6 REQUIRED COMPONENTS Core Gui Widgets Svg)
 find_package(LayerShellQt REQUIRED)
 
 add_library(system_upgrade_logic STATIC
+    src/discover_launcher.cpp
+    src/discover_launcher.h
     src/startup.cpp
     src/startup.h
     src/update_state.cpp

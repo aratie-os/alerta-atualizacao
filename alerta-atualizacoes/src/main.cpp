@@ -1,3 +1,4 @@
+#include "discover_launcher.h"
 #include "startup.h"
 #include "update_checker.h"
 #include "update_notification.h"
@@ -9,7 +10,7 @@
 #include <QGuiApplication>
 #include <QLockFile>
 #include <QLoggingCategory>
-#include <QProcess>
+#include <QProcessEnvironment>
 #include <QStandardPaths>
 
 #include <cstdlib>
@@ -29,10 +30,9 @@ QString lockFilePath()
     return QDir(runtimeDirectory).filePath(QStringLiteral("system-upgrade.lock"));
 }
 
-void openDiscover()
+void openDiscover(const QProcessEnvironment &sessionEnvironment)
 {
-    if (!QProcess::startDetached(QString::fromLatin1(discoverPath),
-                                 {QStringLiteral("--mode"), QStringLiteral("Update")})) {
+    if (!startDiscoverDetached(sessionEnvironment)) {
         qCWarning(logApplication) << "Could not start" << discoverPath;
     }
 }
@@ -53,6 +53,7 @@ int runInstalledSession(int argc, char *argv[])
         return EXIT_SUCCESS;
     }
 
+    const QProcessEnvironment sessionEnvironment = QProcessEnvironment::systemEnvironment();
     const bool waylandSession = QGuiApplication::platformName().contains(
         QStringLiteral("wayland"), Qt::CaseInsensitive);
     if (waylandSession) {
@@ -65,7 +66,7 @@ int runInstalledSession(int argc, char *argv[])
     QObject::connect(&checker,
                      &UpdateChecker::finished,
                      &application,
-                     [&](const UpdateState &state) {
+                     [&, sessionEnvironment](const UpdateState &state) {
                          const bool hasUpdates = state.hasUpdates();
                          if (!hasUpdates) {
                              application.quit();
@@ -76,8 +77,8 @@ int runInstalledSession(int argc, char *argv[])
                          QObject::connect(notification.get(),
                                           &UpdateNotification::updateRequested,
                                           &application,
-                                          [&application] {
-                                              openDiscover();
+                                          [&application, sessionEnvironment] {
+                                              openDiscover(sessionEnvironment);
                                               application.quit();
                                           });
                          QObject::connect(notification.get(),

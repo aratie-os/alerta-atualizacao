@@ -11,6 +11,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-26.04
+    defaults:
+      run:
+        working-directory: alerta-atualizacoes
 
     steps:
       - name: Check out repository
@@ -58,8 +61,8 @@ jobs:
         with:
           name: system-upgrade-deb
           path: |
-            dist/*.deb
-            dist/SHA256SUMS
+            alerta-atualizacoes/dist/*.deb
+            alerta-atualizacoes/dist/SHA256SUMS
           if-no-files-found: error
 
   release:

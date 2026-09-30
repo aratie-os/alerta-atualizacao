@@ -3,10 +3,6 @@
 #include <QRegularExpression>
 
 namespace {
-const QRegularExpression aptPackageLine(
-    QStringLiteral(R"(^[a-z0-9][a-z0-9+.-]*(?::[a-z0-9][a-z0-9-]*)?/[\S]+\s+\S+\s+\S+\s+\[upgradable from:\s+.+\]$)"),
-    QRegularExpression::CaseInsensitiveOption);
-
 const QRegularExpression flatpakReferenceLine(
     QStringLiteral(R"(^[^\s/]+/[^\s/]+/[^\s/]+$)"));
 }
@@ -16,16 +12,15 @@ bool UpdateState::hasUpdates() const
     return aptHasUpdates || flatpakSystemHasUpdates || flatpakUserHasUpdates;
 }
 
-bool aptOutputHasUpdates(const QString &standardOutput)
+bool aptSimulationHasUpdates(const QString &standardOutput)
 {
     const QStringList lines = standardOutput.split(QChar::LineFeed);
     for (const QString &rawLine : lines) {
-        const QString line = rawLine.trimmed();
-        if (line.isEmpty() || line == QStringLiteral("Listing...")
-            || line.startsWith(QStringLiteral("WARNING:"), Qt::CaseInsensitive)) {
-            continue;
+        QString line = rawLine;
+        if (line.endsWith(QChar::CarriageReturn)) {
+            line.chop(1);
         }
-        if (aptPackageLine.match(line).hasMatch()) {
+        if (line.startsWith(QStringLiteral("Inst "))) {
             return true;
         }
     }

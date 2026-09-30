@@ -13,7 +13,9 @@ inferior direito do monitor principal. `Atualizar` abre
 - Sessao Live Casper (`boot=casper` em `/proc/cmdline`): encerra antes de criar
   `QApplication`, lock, processos ou interface.
 - APT: executa o refresh autorizado e consulta separadamente
-  `apt list --upgradable` com `LC_ALL=C` e `LANG=C`.
+  `apt-get -s -o Debug::NoLocking=1 upgrade` com `LC_ALL=C` e `LANG=C`.
+  Apenas linhas iniciadas por `Inst ` representam atualizacoes; isso respeita
+  pacotes adiados pelo mecanismo de phased updates.
 - Flatpak: consulta `remote-ls --updates --columns=ref` nos escopos system e
   user, sem executar `flatpak update`.
 - Falhas sao registradas em stderr e nunca sao tratadas como atualizacoes.
@@ -43,22 +45,23 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Os testes cobrem os falsos positivos do cabecalho `Listing...`, saidas vazias,
-pacotes APT reais, referencias Flatpak, combinacao final dos estados, parsing
-de `boot=casper`, bloqueio integrado da inicializacao Live e posicionamento.
+Os testes cobrem simulacao APT vazia, operacoes `Inst`, pacotes retidos por
+phased updates, referencias Flatpak, combinacao final dos estados, parsing de
+`boot=casper`, bloqueio integrado da inicializacao Live, posicionamento e o
+ambiente de sessao repassado ao Discover.
 
 ## Pacote Debian
 
 ```sh
 dpkg-buildpackage -us -uc -b
-scripts/validate-package.sh ../system-upgrade_2.0.1_amd64.deb
-lintian --fail-on error ../system-upgrade_2.0.1_amd64.changes
+scripts/validate-package.sh ../system-upgrade_2.0.3_amd64.deb
+lintian --fail-on error ../system-upgrade_2.0.3_amd64.changes
 ```
 
 O sudoers instalado permite exclusivamente o comando:
 
 ```text
-/usr/bin/apt-get -o Acquire::Retries=3 update
+/usr/bin/apt-get -o Acquire::Retries=3 -o APT::Update::Error-Mode=any update
 ```
 
 O programa nao instala atualizacoes diretamente. A instalacao continua sob

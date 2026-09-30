@@ -1,1 +1,1 @@
-ALL ALL=(root) NOPASSWD: /usr/bin/apt-get -o Acquire\:\:Retries=3 update
+ALL ALL=(root) NOPASSWD: /usr/bin/apt-get -o Acquire\:\:Retries=3 -o APT\:\:Update\:\:Error-Mode=any update

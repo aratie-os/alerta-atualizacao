@@ -95,11 +95,12 @@ void UpdateChecker::completeStep(bool commandSucceeded,
     switch (m_step) {
     case Step::AptUpdate:
         m_state.aptUpdateSucceeded = commandSucceeded;
-        m_step = Step::AptQuery;
+        m_state.aptHasUpdates = false;
+        m_step = commandSucceeded ? Step::AptQuery : Step::FlatpakSystem;
         break;
     case Step::AptQuery:
         m_state.aptQuerySucceeded = commandSucceeded;
-        m_state.aptHasUpdates = commandSucceeded && aptOutputHasUpdates(standardOutput);
+        m_state.aptHasUpdates = commandSucceeded && aptSimulationHasUpdates(standardOutput);
         m_step = Step::FlatpakSystem;
         break;
     case Step::FlatpakSystem:
@@ -132,13 +133,18 @@ void UpdateChecker::runNextStep()
                     QStringLiteral("/usr/bin/apt-get"),
                     QStringLiteral("-o"),
                     QStringLiteral("Acquire::Retries=3"),
+                    QStringLiteral("-o"),
+                    QStringLiteral("APT::Update::Error-Mode=any"),
                     QStringLiteral("update")},
                    aptUpdateTimeoutMilliseconds);
         break;
     case Step::AptQuery:
         runCommand(Step::AptQuery,
-                   QStringLiteral("/usr/bin/apt"),
-                   {QStringLiteral("list"), QStringLiteral("--upgradable")},
+                   QStringLiteral("/usr/bin/apt-get"),
+                   {QStringLiteral("-s"),
+                    QStringLiteral("-o"),
+                    QStringLiteral("Debug::NoLocking=1"),
+                    QStringLiteral("upgrade")},
                    queryTimeoutMilliseconds);
         break;
     case Step::FlatpakSystem:

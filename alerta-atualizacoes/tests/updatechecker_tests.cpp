@@ -1,7 +1,10 @@
+#include "discover_launcher.h"
 #include "startup.h"
 #include "update_state.h"
 #include "window_placement.h"
 
+#include <QProcess>
+#include <QProcessEnvironment>
 #include <QTest>
 
 #include <cstdlib>
@@ -11,14 +14,17 @@ class UpdateCheckerTests final : public QObject
     Q_OBJECT
 
 private slots:
-    void aptListingHeaderIsNotAnUpdate();
-    void aptPackageLineIsAnUpdate();
+    void aptSimulationWithoutOperationsHasNoUpdates();
+    void phasedUpdatesKeptBackHaveNoUpdates();
+    void aptSimulationWithInstallOperationHasUpdates();
+    void successfulAptQueryWithoutInstallOperationHasNoUpdates();
+    void aptAndFlatpakWithoutUpdatesDoNotShowWindow();
+    void phasedUpdatesRegressionDoesNotShowWindow();
     void flatpakEmptyOutputIsNotAnUpdate();
     void flatpakReferenceIsAnUpdate();
-    void scenarioAListingAndEmptyFlatpakDoesNotShowWindow();
-    void scenarioBAptPackageShowsWindow();
     void scenarioCFlatpakReferenceShowsWindow();
-    void scenarioDAllCommandsSucceedWithoutUpdatesDoesNotShowWindow();
+    void discoverUsesOriginalSessionEnvironment();
+    void layerShellMutationIsNotPropagatedToDiscover();
     void liveCommandLineIsDetected();
     void installedCommandLineIsNotLive();
     void partialCasperTokenIsNotLive();
@@ -27,17 +33,132 @@ private slots:
     void waylandSettingsUseBottomRightAnchors();
 };
 
-void UpdateCheckerTests::aptListingHeaderIsNotAnUpdate()
+void UpdateCheckerTests::discoverUsesOriginalSessionEnvironment()
 {
-    QVERIFY(!aptOutputHasUpdates(QStringLiteral("Listing...\n")));
-    QVERIFY(!aptOutputHasUpdates(
-        QStringLiteral("WARNING: apt does not have a stable CLI interface.\nListing...\n")));
+    QProcessEnvironment sessionEnvironment;
+    sessionEnvironment.insert(QStringLiteral("PATH"), QStringLiteral("/usr/bin"));
+    sessionEnvironment.insert(QStringLiteral("ORIGINAL_SESSION_MARKER"),
+                              QStringLiteral("preserved"));
+
+    QProcess discover;
+    configureDiscoverProcess(discover, sessionEnvironment);
+
+    QCOMPARE(discover.program(), QStringLiteral("/usr/bin/plasma-discover"));
+    QCOMPARE(discover.arguments(),
+             QStringList({QStringLiteral("--mode"), QStringLiteral("Update")}));
+    QCOMPARE(discover.processEnvironment(), sessionEnvironment);
 }
 
-void UpdateCheckerTests::aptPackageLineIsAnUpdate()
+void UpdateCheckerTests::layerShellMutationIsNotPropagatedToDiscover()
 {
-    QVERIFY(aptOutputHasUpdates(QStringLiteral(
-        "example/resolute-updates 2.0-1 amd64 [upgradable from: 1.0-1]\n")));
+    QProcessEnvironment sessionEnvironment;
+    sessionEnvironment.insert(QStringLiteral("PATH"), QStringLiteral("/usr/bin"));
+
+    QProcessEnvironment applicationEnvironment = sessionEnvironment;
+    applicationEnvironment.insert(QStringLiteral("QT_WAYLAND_SHELL_INTEGRATION"),
+                                  QStringLiteral("layer-shell"));
+    QCOMPARE(applicationEnvironment.value(QStringLiteral("QT_WAYLAND_SHELL_INTEGRATION")),
+             QStringLiteral("layer-shell"));
+
+    QProcess discover;
+    configureDiscoverProcess(discover, sessionEnvironment);
+
+    QVERIFY(!discover.processEnvironment().contains(
+        QStringLiteral("QT_WAYLAND_SHELL_INTEGRATION")));
+    QCOMPARE(discover.processEnvironment(), sessionEnvironment);
+}
+
+void UpdateCheckerTests::aptSimulationWithoutOperationsHasNoUpdates()
+{
+    const QString output = QStringLiteral(
+        "Reading package lists...\n"
+        "Building dependency tree...\n"
+        "Reading state information...\n"
+        "Calculating upgrade...\n"
+        "0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.\n");
+
+    QVERIFY(!aptSimulationHasUpdates(output));
+}
+
+void UpdateCheckerTests::phasedUpdatesKeptBackHaveNoUpdates()
+{
+    const QString output = QStringLiteral(
+        "Reading package lists...\n"
+        "Building dependency tree...\n"
+        "Reading state information...\n"
+        "Calculating upgrade...\n"
+        "The following packages have been kept back:\n"
+        "  glycin-loaders glycin-thumbnailers libglycin-2-0\n"
+        "0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.\n");
+
+    QVERIFY(!aptSimulationHasUpdates(output));
+}
+
+void UpdateCheckerTests::aptSimulationWithInstallOperationHasUpdates()
+{
+    const QString output = QStringLiteral(
+        "Reading package lists...\n"
+        "Calculating upgrade...\n"
+        "Inst example [1.0] (2.0 Ubuntu:26.04/resolute-updates [amd64])\n"
+        "Conf example (2.0 Ubuntu:26.04/resolute-updates [amd64])\n");
+
+    QVERIFY(aptSimulationHasUpdates(output));
+}
+
+void UpdateCheckerTests::successfulAptQueryWithoutInstallOperationHasNoUpdates()
+{
+    UpdateState state;
+    state.aptUpdateSucceeded = true;
+    state.aptQuerySucceeded = true;
+    state.aptHasUpdates = aptSimulationHasUpdates(QStringLiteral(
+        "Reading package lists...\n"
+        "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.\n"));
+
+    QVERIFY(!state.aptHasUpdates);
+}
+
+void UpdateCheckerTests::aptAndFlatpakWithoutUpdatesDoNotShowWindow()
+{
+    UpdateState state;
+    state.aptUpdateSucceeded = true;
+    state.aptQuerySucceeded = true;
+    state.aptHasUpdates = aptSimulationHasUpdates(QStringLiteral(
+        "0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.\n"));
+    state.flatpakSystemQuerySucceeded = true;
+    state.flatpakSystemHasUpdates = flatpakOutputHasUpdates({});
+    state.flatpakUserQuerySucceeded = true;
+    state.flatpakUserHasUpdates = flatpakOutputHasUpdates({});
+
+    QVERIFY(!state.hasUpdates());
+}
+
+void UpdateCheckerTests::phasedUpdatesRegressionDoesNotShowWindow()
+{
+    const QString aptListOutput = QStringLiteral(
+        "glycin-loaders/resolute-updates 2.1.5+ds-0ubuntu0.2 amd64 "
+        "[upgradable from: 2.1.1+ds-0ubuntu1]\n"
+        "glycin-thumbnailers/resolute-updates 2.1.5+ds-0ubuntu0.2 amd64 "
+        "[upgradable from: 2.1.1+ds-0ubuntu1]\n"
+        "libglycin-2-0/resolute-updates 2.1.5+ds-0ubuntu0.2 amd64 "
+        "[upgradable from: 2.1.1+ds-0ubuntu1]\n");
+    const QString simulationOutput = QStringLiteral(
+        "Reading package lists...\n"
+        "Building dependency tree...\n"
+        "Reading state information...\n"
+        "Calculating upgrade...\n"
+        "The following upgrades have been deferred due to phasing:\n"
+        "  glycin-loaders glycin-thumbnailers libglycin-2-0\n"
+        "0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.\n");
+
+    QVERIFY(aptListOutput.contains(QStringLiteral("glycin-loaders")));
+    UpdateState state;
+    state.aptUpdateSucceeded = true;
+    state.aptQuerySucceeded = true;
+    state.aptHasUpdates = aptSimulationHasUpdates(simulationOutput);
+    state.flatpakSystemQuerySucceeded = true;
+    state.flatpakUserQuerySucceeded = true;
+
+    QVERIFY(!state.hasUpdates());
 }
 
 void UpdateCheckerTests::flatpakEmptyOutputIsNotAnUpdate()
@@ -52,26 +173,6 @@ void UpdateCheckerTests::flatpakReferenceIsAnUpdate()
         QStringLiteral("org.example.Application/x86_64/stable\n")));
 }
 
-void UpdateCheckerTests::scenarioAListingAndEmptyFlatpakDoesNotShowWindow()
-{
-    UpdateState state;
-    state.aptQuerySucceeded = true;
-    state.aptHasUpdates = aptOutputHasUpdates(QStringLiteral("Listing...\n"));
-    state.flatpakSystemQuerySucceeded = true;
-    state.flatpakSystemHasUpdates = flatpakOutputHasUpdates({});
-
-    QVERIFY(!state.hasUpdates());
-}
-
-void UpdateCheckerTests::scenarioBAptPackageShowsWindow()
-{
-    UpdateState state;
-    state.aptQuerySucceeded = true;
-    state.aptHasUpdates = aptOutputHasUpdates(QStringLiteral(
-        "example/resolute-updates 2.0-1 amd64 [upgradable from: 1.0-1]\n"));
-    QVERIFY(state.hasUpdates());
-}
-
 void UpdateCheckerTests::scenarioCFlatpakReferenceShowsWindow()
 {
     UpdateState state;
@@ -79,20 +180,6 @@ void UpdateCheckerTests::scenarioCFlatpakReferenceShowsWindow()
     state.flatpakSystemHasUpdates = flatpakOutputHasUpdates(
         QStringLiteral("org.example.Application/x86_64/stable\n"));
     QVERIFY(state.hasUpdates());
-}
-
-void UpdateCheckerTests::scenarioDAllCommandsSucceedWithoutUpdatesDoesNotShowWindow()
-{
-    UpdateState state;
-    state.aptUpdateSucceeded = true;
-    state.aptQuerySucceeded = true;
-    state.flatpakSystemQuerySucceeded = true;
-    state.flatpakUserQuerySucceeded = true;
-
-    QVERIFY(!state.aptHasUpdates);
-    QVERIFY(!state.flatpakSystemHasUpdates);
-    QVERIFY(!state.flatpakUserHasUpdates);
-    QVERIFY(!state.hasUpdates());
 }
 
 void UpdateCheckerTests::liveCommandLineIsDetected()

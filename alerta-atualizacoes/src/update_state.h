@@ -16,5 +16,5 @@ struct UpdateState {
     [[nodiscard]] bool hasUpdates() const;
 };
 
-[[nodiscard]] bool aptOutputHasUpdates(const QString &standardOutput);
+[[nodiscard]] bool aptSimulationHasUpdates(const QString &standardOutput);
 [[nodiscard]] bool flatpakOutputHasUpdates(const QString &standardOutput);
