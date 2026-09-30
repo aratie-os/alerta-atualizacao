@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=System Updates
+Name[pt_BR]=Atualizações do sistema
+Comment=Check for operating system and Flatpak updates
+Comment[pt_BR]=Verifique atualizações do sistema e do Flatpak
+Exec=/usr/bin/system-upgrade
+Icon=system-software-update
+Terminal=false
+Categories=System;
+Keywords=update;upgrade;packages;software;
+Keywords[pt_BR]=atualização;pacotes;programas;sistema;
+StartupNotify=false
+DBusActivatable=false

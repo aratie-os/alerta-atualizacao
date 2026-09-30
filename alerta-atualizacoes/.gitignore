@@ -1,0 +1,9 @@
+/build/
+/build-*/
+/obj-*/
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/system-upgrade/
+/debian/system-upgrade.substvars
+/dist/

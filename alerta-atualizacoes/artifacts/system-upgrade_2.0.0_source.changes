@@ -1,0 +1,29 @@
+Format: 1.8
+Date: Tue, 29 Sep 2026 12:00:00 -0300
+Source: system-upgrade
+Built-For-Profiles: derivative.ubuntu noudeb
+Architecture: source
+Version: 2.0.0
+Distribution: resolute
+Urgency: medium
+Maintainer: Aratie OS Developers <aratie-os@users.noreply.github.com>
+Changed-By: Aratie OS Developers <aratie-os@users.noreply.github.com>
+Changes:
+ system-upgrade (2.0.0) resolute; urgency=medium
+ .
+   * Reimplement the update notifier in C++ with Qt 6 and KDE Frameworks 6.
+   * Replace privileged shell scripts and APT output parsing with PackageKitQt6.
+   * Add Plasma notifications, a StatusNotifierItem and single-instance support.
+   * Rebuild the Debian source package and add automated tests.
+Checksums-Sha1:
+ fcbc7bb7e38631b971c9bea0b7e9b32320526c92 823 system-upgrade_2.0.0.dsc
+ 6d3dcfa1616247a90f19ec56e96c8bd539874693 19748 system-upgrade_2.0.0.tar.xz
+ 32b6494924901bd312b482f9cfbedb2c4532b7d8 4930 system-upgrade_2.0.0_source.buildinfo
+Checksums-Sha256:
+ be43260461322c2d3020ca27cd8dcca4fb56848152e1b8890f65130889854695 823 system-upgrade_2.0.0.dsc
+ 06d7664189ecc43afa5d8e54784d5ba1c1b438a36fce6e12f3f35fb4a7ec3ba6 19748 system-upgrade_2.0.0.tar.xz
+ b7253fc16d5986f898d7111f033045d3c77dfd4a743aa9a588fb664105536065 4930 system-upgrade_2.0.0_source.buildinfo
+Files:
+ 645cc6964be7ff6ad1fb84744ce4d806 823 admin optional system-upgrade_2.0.0.dsc
+ 9a8f965452e60f5324d2b5a71a10bb8f 19748 admin optional system-upgrade_2.0.0.tar.xz
+ 5e2d12e90903e5176515911e93f81286 4930 admin optional system-upgrade_2.0.0_source.buildinfo

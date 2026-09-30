@@ -1,0 +1,16 @@
+system-upgrade (2.0.1) resolute; urgency=medium
+
+  * Fix false alerts by parsing actual APT and Flatpak update entries.
+  * Exit before initialization in Casper live sessions.
+  * Add a compact LayerShellQt alert for Plasma Wayland and X11.
+
+ -- Aratie OS Developers <aratie-os@users.noreply.github.com>  Wed, 30 Sep 2026 08:00:00 -0300
+
+system-upgrade (2.0.0) resolute; urgency=medium
+
+  * Reimplement the update notifier in C++ with Qt 6 and KDE Frameworks 6.
+  * Replace privileged shell scripts and APT output parsing with PackageKitQt6.
+  * Add Plasma notifications, a StatusNotifierItem and single-instance support.
+  * Rebuild the Debian source package and add automated tests.
+
+ -- Aratie OS Developers <aratie-os@users.noreply.github.com>  Tue, 29 Sep 2026 12:00:00 -0300

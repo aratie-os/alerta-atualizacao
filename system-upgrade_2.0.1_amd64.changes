@@ -1,0 +1,31 @@
+Format: 1.8
+Date: Wed, 30 Sep 2026 08:00:00 -0300
+Source: system-upgrade
+Binary: system-upgrade
+Built-For-Profiles: derivative.ubuntu noudeb
+Architecture: amd64
+Version: 2.0.1
+Distribution: resolute
+Urgency: medium
+Maintainer: Aratie OS Developers <aratie-os@users.noreply.github.com>
+Changed-By: Aratie OS Developers <aratie-os@users.noreply.github.com>
+Description:
+ system-upgrade - compact update alert for KDE Plasma
+Changes:
+ system-upgrade (2.0.1) resolute; urgency=medium
+ .
+   * Fix false alerts by parsing actual APT and Flatpak update entries.
+   * Exit before initialization in Casper live sessions.
+   * Add a compact LayerShellQt alert for Plasma Wayland and X11.
+Checksums-Sha1:
+ fca47cbfd8f3b46b066fbfd0870f4ba3eec13024 878916 system-upgrade-dbgsym_2.0.1_amd64.ddeb
+ af53285ebad91b3d86e0262d0211e3ec9878b01d 12049 system-upgrade_2.0.1_amd64.buildinfo
+ 97597d70d865734719a5ff3134e855621359b56e 24678 system-upgrade_2.0.1_amd64.deb
+Checksums-Sha256:
+ 1b9e4aca1e7e70b7c37a0bafb018392356195e29e93048b9825dffc31c20ef5e 878916 system-upgrade-dbgsym_2.0.1_amd64.ddeb
+ 66634eeeb362334045c9c58e69342b1c5f24d1a0d50fa88f4f122695ab7c8873 12049 system-upgrade_2.0.1_amd64.buildinfo
+ 52820c15483229c48930a6bd7d0f54c3cd9ccf588c0781f07f6b2450e8475740 24678 system-upgrade_2.0.1_amd64.deb
+Files:
+ 8daa8979cf788efe916241f94e5cb531 878916 debug optional system-upgrade-dbgsym_2.0.1_amd64.ddeb
+ 76f3008936dae2563c9b33b14d8e3a0f 12049 admin optional system-upgrade_2.0.1_amd64.buildinfo
+ 9d9d697b2bb6853bb00ae56e29480749 24678 admin optional system-upgrade_2.0.1_amd64.deb

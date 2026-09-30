@@ -1,0 +1,18 @@
+.TH SYSTEM-UPGRADE 1 "September 2026" "system-upgrade 2.0.1" "User Commands"
+.SH NAME
+system-upgrade \- show a Plasma alert when APT or Flatpak updates exist
+.SH SYNOPSIS
+.B system-upgrade
+.SH DESCRIPTION
+.B system-upgrade
+refreshes APT metadata, checks APT and system/user Flatpak sources, and shows a
+compact alert only when at least one update is available. Choosing Update opens
+Plasma Discover. Casper live sessions are ignored.
+.SH FILES
+.I /etc/xdg/autostart/system-upgrade.desktop
+.br
+Starts the check with the Plasma session.
+.PP
+.I /etc/sudoers.d/system-upgrade
+.br
+Allows only the fixed APT metadata refresh command without a password.

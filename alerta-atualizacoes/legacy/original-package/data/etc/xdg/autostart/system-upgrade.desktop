@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=System Upgrade
+Exec=/usr/bin/system-upgrade
+Icon=utilities-terminal

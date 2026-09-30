@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.aratie_os.system_upgrade</id>
+  <name>System Updates</name>
+  <name xml:lang="pt-BR">Atualizações do sistema</name>
+  <summary>Check for operating system and Flatpak updates</summary>
+  <summary xml:lang="pt-BR">Verifique atualizações do sistema e do Flatpak</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="io.github.aratie_os">
+    <name>Aratie OS Developers</name>
+  </developer>
+  <description>
+    <p>System Updates checks APT and Flatpak sources at Plasma login and opens Discover when the user chooses to update.</p>
+    <p xml:lang="pt-BR">Atualizações do sistema verifica fontes APT e Flatpak no login do Plasma e abre o Discover quando o usuário escolhe atualizar.</p>
+  </description>
+  <launchable type="desktop-id">system-upgrade.desktop</launchable>
+  <icon type="stock">system-software-update</icon>
+  <provides>
+    <binary>system-upgrade</binary>
+  </provides>
+  <categories>
+    <category>System</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="2.0.1" date="2026-09-30">
+      <description>
+        <p>Fix false update alerts, skip live sessions and place the alert in the lower-right corner.</p>
+      </description>
+    </release>
+    <release version="2.0.0" date="2026-09-29">
+      <description>
+        <p>Native Qt 6 and PackageKit rewrite for KDE Plasma 6.</p>
+      </description>
+    </release>
+  </releases>
+  <url type="homepage">https://github.com/aratie-os/alertaatualizacao</url>
+</component>

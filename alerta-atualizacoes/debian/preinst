@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+legacy_autostart=${DPKG_ROOT:-}/etc/xdg/autostart/system-upgrade.desktop
+legacy_sha256=1246a6765592f64b838519f5c23e6c9d3667ac59618f24909b005ba213649f67
+
+if [ "$1" = upgrade ] && dpkg --compare-versions "${2:-0}" lt 2.0.0; then
+    if [ -f "$legacy_autostart" ]; then
+        current_sha256=$(sha256sum "$legacy_autostart" | cut -d ' ' -f 1)
+        if [ "$current_sha256" = "$legacy_sha256" ]; then
+            rm -f -- "$legacy_autostart"
+        fi
+    fi
+fi
+
+exit 0

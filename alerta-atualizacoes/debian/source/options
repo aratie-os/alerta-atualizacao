@@ -1,0 +1,5 @@
+tar-ignore = build
+tar-ignore = build-isolated
+tar-ignore = .codex
+tar-ignore = .agents
+tar-ignore = artifacts

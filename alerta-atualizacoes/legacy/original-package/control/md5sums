@@ -1,0 +1,7 @@
+73ec36c6ab6a08f85972a20930b6975e  usr/share/applications/system-upgrade.desktop
+640173e760e4701580e1b060bac450eb  usr/bin/system-upgrade
+8facc79bdcc9224405f454a5aaea5863  usr/bin/system-upgrade-exe
+d41d8cd98f00b204e9800998ecf8427e  DEBIAN/md5sums
+dad191fe4f340b9fbc63bbbd93723a60  DEBIAN/control
+022ffd11eb198d0f1b393efd4d30135e  etc/sudoers.d/systemupdate
+76cbc605c54f6a8f28d62948c699d4eb  etc/xdg/autostart/system-upgrade.desktop
