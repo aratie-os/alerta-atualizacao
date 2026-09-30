@@ -1,8 +1,8 @@
 # Auditoria do pacote original
 
-Origem auditada: `debian-binary`, `control.tar.xz` e `data.tar.xz` do repositorio
-original, preservados em `legacy/original-package/archives/`. O conteudo extraido
-esta em `legacy/original-package/control/` e `legacy/original-package/data/`.
+Origem auditada: `debian-binary`, `control.tar.xz` e `data.tar.xz` do pacote
+original. Depois da conclusao da auditoria, esses artefatos e o conteudo extraido
+foram removidos da arvore atual; permanecem disponiveis no historico Git.
 
 ## Metadados Debian
 

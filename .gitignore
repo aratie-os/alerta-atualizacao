@@ -1,10 +1,10 @@
-# Debian package outputs emitted at the repository root.
-/*.deb
-/*.ddeb
-/*.buildinfo
-/*.changes
-/*.dsc
-/*.tar.xz
+# Debian package outputs.
+*.deb
+*.ddeb
+*.buildinfo
+*.changes
+*.dsc
+system-upgrade_*.tar.*
 
 # Historical local package exports; releases belong in Actions/Releases.
 /alerta-atualizacoes/artifacts/

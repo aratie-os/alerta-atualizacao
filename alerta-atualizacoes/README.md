@@ -54,8 +54,8 @@ ambiente de sessao repassado ao Discover.
 
 ```sh
 dpkg-buildpackage -us -uc -b
-scripts/validate-package.sh ../system-upgrade_2.0.3_amd64.deb
-lintian --fail-on error ../system-upgrade_2.0.3_amd64.changes
+scripts/validate-package.sh ../system-upgrade_2.0.4_amd64.deb
+lintian --fail-on error ../system-upgrade_2.0.4_amd64.changes
 ```
 
 O sudoers instalado permite exclusivamente o comando:

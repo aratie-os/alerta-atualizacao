@@ -1,6 +1,14 @@
 /build/
 /build-*/
 /obj-*/
+/CMakeCache.txt
+/CMakeFiles/
+/CTestTestfile.cmake
+/Testing/
+/cmake_install.cmake
+/compile_commands.json
+/install_manifest.txt
+/Makefile
 /debian/.debhelper/
 /debian/debhelper-build-stamp
 /debian/files

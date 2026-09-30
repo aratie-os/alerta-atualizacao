@@ -24,6 +24,11 @@
   </categories>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.0.4" date="2026-09-30">
+      <description>
+        <p>Prepare the first official release with corrected project metadata and licensing.</p>
+      </description>
+    </release>
     <release version="2.0.3" date="2026-09-30">
       <description>
         <p>Launch Discover with the original Plasma session environment.</p>
@@ -41,9 +46,9 @@
     </release>
     <release version="2.0.0" date="2026-09-29">
       <description>
-        <p>Native Qt 6 and PackageKit rewrite for KDE Plasma 6.</p>
+        <p>Native C++ and Qt 6 reimplementation with APT and Flatpak detection, Discover integration, XDG autostart and Debian packaging.</p>
       </description>
     </release>
   </releases>
-  <url type="homepage">https://github.com/aratie-os/alertaatualizacao</url>
+  <url type="homepage">https://github.com/aratie-os/alerta-atualizacao</url>
 </component>

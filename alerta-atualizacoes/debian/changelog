@@ -1,3 +1,12 @@
+system-upgrade (2.0.4) resolute; urgency=medium
+
+  * Correct project URLs and restore the top-level GPL license and README.
+  * Validate project and release-tag version consistency in CI.
+  * Remove obsolete original-package audit payloads.
+  * Prepare the first official GitHub release.
+
+ -- Aratie OS Developers <aratie-os@users.noreply.github.com>  Wed, 30 Sep 2026 14:00:00 -0300
+
 system-upgrade (2.0.3) resolute; urgency=medium
 
   * Preserve the original Plasma session environment when launching Discover.
@@ -24,9 +33,9 @@ system-upgrade (2.0.1) resolute; urgency=medium
 
 system-upgrade (2.0.0) resolute; urgency=medium
 
-  * Reimplement the update notifier in C++ with Qt 6 and KDE Frameworks 6.
-  * Replace privileged shell scripts and APT output parsing with PackageKitQt6.
-  * Add Plasma notifications, a StatusNotifierItem and single-instance support.
-  * Rebuild the Debian source package and add automated tests.
+  * Reimplement the update notifier in native C++ and Qt 6.
+  * Replace the shell and YAD interface with APT and Flatpak update detection.
+  * Integrate KDE Discover and XDG autostart.
+  * Add Debian packaging and automated tests.
 
  -- Aratie OS Developers <aratie-os@users.noreply.github.com>  Tue, 29 Sep 2026 12:00:00 -0300

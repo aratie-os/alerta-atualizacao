@@ -11,6 +11,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-26.04
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: alerta-atualizacoes
@@ -26,6 +27,13 @@ jobs:
             build-essential cmake debhelper devscripts dpkg-dev fakeroot \
             lintian ninja-build qt6-base-dev qt6-svg-dev \
             liblayershellqtinterface-dev sudo
+
+      - name: Check version consistency
+        run: scripts/check-version-consistency.sh
+
+      - name: Validate release tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: scripts/check-version-consistency.sh "$GITHUB_REF_NAME"
 
       - name: Configure
         run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
@@ -69,6 +77,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-26.04
+    timeout-minutes: 10
     permissions:
       contents: write
 

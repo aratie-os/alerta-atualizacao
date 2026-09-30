@@ -1,6 +1,6 @@
 # Arquitetura atual
 
-A versao 2.0.3 mantem a aplicacao nativa Qt 6 e corrige o fluxo de login para
+A versao 2.0.4 mantem a aplicacao nativa Qt 6 e corrige o fluxo de login para
 ser estritamente efemero: checar, alertar apenas quando necessario e encerrar.
 
 ## Fluxo

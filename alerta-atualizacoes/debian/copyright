@@ -1,17 +1,10 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: system-upgrade
-Source: https://github.com/aratie-os/alertaatualizacao
+Source: https://github.com/aratie-os/alerta-atualizacao
 
 Files: *
 Copyright: 2026 Aratie OS Developers
 License: GPL-3+
-
-Files: legacy/original-package/*
-Copyright: 2025 Elton Fabricio
-License: UNKNOWN
- The original binary package did not include a copyright or license statement.
- These files are retained only as historical audit material and are not installed
- in the binary package.
 
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify it under
